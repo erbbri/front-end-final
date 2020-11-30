@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Server Side Example</title>
+    <title>Find Book</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="../stylesheets/style.css">
 
@@ -41,5 +41,104 @@
         </ul>
     </div>
 </nav>
+<div class="container">
+    <br>
+    <h1>Find By Author Name or ISBN</h1>
+    <form method="GET"
+          action="https://floating-cliffs-12915.herokuapp.com/api/books?author=">
+        <h3>Please fill out one of the following fields:</h3>
+        <div class="form-group">
+            <label for="author">Search By Author:</label>
+            <input type="text" name="author" id="author" class="form-control"
+                   placeholder="Search By Name of Author">
+        </div>
+    </form>
+    <br>
+    <button class="btn-primary btn-lg" id="btnLoadName">Find Book</button>
+    <hr>
+    <div class="jumbotron" id="output">
+    </div>
+    <hr>
+    <form method="GET"
+          action="https://floating-cliffs-12915.herokuapp.com/api/books/">
+        <div class="form-group">
+            <label for="isbn">Search By ISBN:</label>
+            <input type="text" maxlength="13" name="isbn" id="isbn" class="form-control"
+                   placeholder="Search By ISBN Number">
+        </div>
+    </form>
+    <br>
+    <button class="btn-primary btn-lg" id="btnLoadIsbn">Find Book</button>
+    <hr>
+    <div class="jumbotron" id="output2">
+    </div>
+</div>
+<script>
+    function CreateTable(data){
+        let table = "";
+        table =
+            '<table class="table table-bordered table-hover"> \n' +
+            '   <thead>\n' +
+            '       <tr>\n' +
+            '           <th scope="col">Book Title</th> \n'+
+            '           <th scope="col">Author</th> \n'+
+            '           <th scope="col">ISBN</th> \n'+
+            '           <th scope="col">Price</th> \n'+
+            '       </tr>\n' +
+            '   </thead>\n' +
+            '   <tbody>\n';
+
+        for (let book in data){
+            table +=
+                '       <tr>\n' +
+                '           <td>' + data[book]["name"]+  '</td>\n' +
+                '           <td>' + data[book]["author"]+  '</td>\n' +
+                '           <td>' + data[book]["isbn"]+  '</td>\n' +
+                '           <td>' + '$' + data[book]["price"]+  '</td>\n' +
+                '       </tr>\n';
+        }
+
+        table +=
+            '   </tbody>\n' +
+            '</table>\n'
+        return table;
+    }
+
+    document.getElementById("btnLoadName").addEventListener("click", (event) =>{
+        let authorName = document.getElementById("author").value;
+        let url = "https://floating-cliffs-12915.herokuapp.com/api/books?author=" + authorName;
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function (){
+            if (this.readyState == 4 && this.status == 200){
+                document.getElementById("output").innerHTML =
+                    CreateTable(JSON.parse(this.responseText));
+            }
+            else{
+                document.getElementById("output").innerHTML =
+                    "404: Error Not Found";
+            }
+        };
+        xhttp.open('GET', url, true);
+        xhttp.send();
+    });
+
+    document.getElementById("btnLoadIsbn").addEventListener("click", (event) =>{
+        let isbnValue = document.getElementById("isbn").value;
+        let url = "https://floating-cliffs-12915.herokuapp.com/api/books/" + isbnValue;
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function (){
+            if (this.readyState == 4 && this.status == 200){
+                document.getElementById("output2").innerHTML =
+                    "<pre>" + this.responseText + "</pre>";
+            }
+            else if (this.status == 404){
+                document.getElementById("output2").innerHTML =
+                    "404: Error Not Found";
+            }
+        };
+        xhttp.open('GET', url, true);
+        xhttp.send();
+    });
+</script>
 </body>
 </html>

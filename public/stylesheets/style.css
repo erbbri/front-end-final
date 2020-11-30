@@ -1,37 +1,38 @@
 body{
-  background-color: #f8dfb8;
-  text-align: center;
-  color: #6b4633
+  background-color: #D8E6F2;
+  text-align: left;
+  color: #516673
 }
-.menu-text{
-  font-family: "Baskerville Old Face";
-  color: white;
+h1{
+  font-family: "Century Gothic";
+  color: #1B1F26;
+  font-weight: bold;
+  text-align: center;
+}
+h3{
+  font-family: "Century Gothic";
+  color: #1B1F26;
+  font-weight: bold;
+  text-align: center;
 }
 .navbar-custom {
-  background-color: #253812;
+  background-color: #1B1F26;
 }
 .navbar-custom .navbar-brand,
 .navbar-custom .navbar-text {
-  color: #f8dfb8;
+  color: #D8E6F2;
   font-family: "Baskerville Old Face";
   font-weight: bold;
 }
-ul{
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+.jumbotron{
+  background-color: #96B3D9;
+}
+div{
   text-align: left;
 }
-.menu-images{
-  width:  300px;
-  height: 200px;
-  object-fit: cover;
-}
-.column1 {
-  background-color: #ba621c;
-  border: white 1px solid;
-  color: white;
-  border: white 1px solid;
-}
-.column2 {
-  background-color: #6b4633;
-  color: white;
-  border: white 1px solid;
-}
+

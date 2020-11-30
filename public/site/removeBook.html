@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Server Side Example</title>
+    <title>Delete</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="../stylesheets/style.css">
 
@@ -41,5 +41,100 @@
         </ul>
     </div>
 </nav>
+    <div class="container">
+        <br>
+        <h1>Delete Book From the Database</h1>
+        <form method="GET"
+              action="https://floating-cliffs-12915.herokuapp.com/api/books?author=">
+            <div class="form-group">
+                <label for="author">Author:</label>
+                <input type="text" name="author" id="author" class="form-control"
+                       placeholder="Find Book By Author">
+            </div>
+        </form>
+        <button class="btn-primary btn-lg" id="btnFindIsbn">Find</button>
+        <hr>
+        <div class="jumbotron" id="output">
+        </div>
+        <form method="GET"
+              action="https://floating-cliffs-12915.herokuapp.com/api/books/">
+            <div class="form-group">
+                <label for="isbnDel">ISBN:</label>
+                <input type="text" name="isbnDel" id="isbnDel" class="form-control"
+                       placeholder="Delete By ISBN Number">
+            </div>
+        </form>
+        <button class="btn-danger btn-lg" id="btnDelIsbn">Delete</button>
+        <hr>
+        <div class="jumbotron" id="output2">
+        </div>
+    </div>
+<script>
+    function CreateTable(data){
+        let table = "";
+        table =
+            '<table class="table table-bordered table-hover"> \n' +
+            '   <thead>\n' +
+            '       <tr>\n' +
+            '           <th scope="col">Book Title</th> \n'+
+            '           <th scope="col">Author</th> \n'+
+            '           <th scope="col">ISBN</th> \n'+
+            '           <th scope="col">Price</th> \n'+
+            '       </tr>\n' +
+            '   </thead>\n' +
+            '   <tbody>\n';
+
+        for (let book in data){
+            table +=
+                '       <tr>\n' +
+                '           <td>' + data[book]["name"]+  '</td>\n' +
+                '           <td>' + data[book]["author"]+  '</td>\n' +
+                '           <td>' + data[book]["isbn"]+  '</td>\n' +
+                '           <td>' + '$' + data[book]["price"]+  '</td>\n' +
+                '       </tr>\n';
+        }
+
+        table +=
+            '   </tbody>\n' +
+            '</table>\n'
+        return table;
+    }
+
+    document.getElementById("btnFindIsbn").addEventListener("click", (event) => {
+        let authorName = document.getElementById("author").value;
+        let url = "https://floating-cliffs-12915.herokuapp.com/api/books?author=" + authorName;
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function (){
+            if (this.readyState == 4 && this.status == 200){
+                document.getElementById("output").innerHTML =
+                    CreateTable(JSON.parse(this.responseText));
+            }
+            else if (this.status == 404){
+                document.getElementById("output").innerHTML =
+                    "404: Error Not Found";
+            }
+        };
+        xhttp.open('GET', url, true);
+        xhttp.send();
+    });
+
+    document.getElementById("btnDelIsbn").addEventListener("click", (event) => {
+        let isbnValue = document.getElementById("isbnDel").value;
+        let url = "https://floating-cliffs-12915.herokuapp.com/api/books/" + isbnValue;
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("output2").innerHTML =
+                    "Book Successfully Deleted";
+            }
+            if (this.status == 404) {
+                document.getElementById("output2").innerHTML =
+                    "404: Error Not Found";
+            }
+        };
+        xhttp.open('DELETE', url, true);
+        xhttp.send();
+    });
+</script>
 </body>
 </html>
